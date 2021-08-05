@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {useLazyQuery, useMutation} from '@apollo/client';
-import {LOAD_MOVIES} from '../GraphQL/Queries';
-import {Link} from 'react-router-dom';
-import {Box, Button, Snackbar} from "@material-ui/core";
-import {DELETE_MOVIE_MUTATION, EDIT_MOVIE_MUTATION} from "../GraphQL/Mutations";
-import {makeStyles} from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal'
+import React, { useEffect, useState } from "react";
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { LOAD_MOVIES } from '../GraphQL/Queries';
+import { Link } from 'react-router-dom';
+import { Box, Button, Snackbar } from "@material-ui/core";
+import { DELETE_MOVIE_MUTATION, EDIT_MOVIE_MUTATION } from "../GraphQL/Mutations";
+import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
 import styled from 'styled-components';
 import TextField from "@material-ui/core/TextField";
-import MuiAlert, {AlertProps} from '@material-ui/lab/Alert';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
 
 interface movieType {
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 const GetMovies = () => {
     // const {error, loading, data} = useQuery(LOAD_MOVIES);
-    const [getMovies, {error, loading, data}] = useLazyQuery(LOAD_MOVIES);
+    const [getMovies, { error, loading, data }] = useLazyQuery(LOAD_MOVIES);
     const [movies, setMovies] = useState<movieType[]>([]);
     const [deleteMovie] = useMutation(DELETE_MOVIE_MUTATION);
     const classes = useStyles();
@@ -74,14 +74,14 @@ const GetMovies = () => {
             variables: {
                 id: id
             },
-            refetchQueries: [{query: LOAD_MOVIES}]
+            refetchQueries: [{ query: LOAD_MOVIES }]
         });
 
         if (error) {
             console.log(error);
         }
 
-   
+
     };
 
 
@@ -122,7 +122,7 @@ const GetMovies = () => {
                 id: id,
                 name: name,
             },
-            refetchQueries: [{query: LOAD_MOVIES}]
+            refetchQueries: [{ query: LOAD_MOVIES }]
         });
     };
 
@@ -139,7 +139,7 @@ const GetMovies = () => {
             {movies.map((val: movieType) => {
                 return (
                     <MovieOption>
-                        <Link to={`editMovieForm/${val.id}`} style={{textDecoration: 'none'}}>
+                        <Link to={`editMovieForm/${val.id}`} style={{ textDecoration: 'none' }}>
                             <MovieName key={val.id}>{val.name} - <span>{val.genre}</span></MovieName>
                         </Link>
                         <Button color={"secondary"} type="button" onClick={handleOpen}>

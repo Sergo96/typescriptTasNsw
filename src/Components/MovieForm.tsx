@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {CREATE_MOVIE_MUTATION, EDIT_MOVIE_MUTATION} from "../GraphQL/Mutations";
-import {gql, useMutation, useQuery} from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import { CREATE_MOVIE_MUTATION, EDIT_MOVIE_MUTATION } from "../GraphQL/Mutations";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import TextField from '@material-ui/core/TextField';
-import {Button} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import styled from 'styled-components';
-import {useHistory, useParams} from "react-router-dom";
-import {LOAD_MOVIES} from "../GraphQL/Queries";
+import { useHistory, useParams } from "react-router-dom";
+import { LOAD_MOVIES } from "../GraphQL/Queries";
 
 interface movieTypes {
     id: string;
@@ -17,9 +17,9 @@ interface movieTypes {
 const MovieForm = () => {
     const [name, setName] = useState("");
     const [genre, setGenre] = useState("");
-    const [addMovie, {error}] = useMutation(CREATE_MOVIE_MUTATION);
+    const [addMovie, { error }] = useMutation(CREATE_MOVIE_MUTATION);
     const [updateMovie] = useMutation(EDIT_MOVIE_MUTATION);
-    const {id}: any = useParams();
+    const { id }: any = useParams();
 
     // const stringId = id.toString();
     console.log(name);
@@ -34,7 +34,7 @@ const MovieForm = () => {
 `);
 
 
-    const {loading, data} = useQuery(LOAD_MOVIE);
+    const { loading, data } = useQuery(LOAD_MOVIE);
     const [movieData, setMovieData] = useState<movieTypes[]>([]);
 
     console.log(movieData)
@@ -54,7 +54,7 @@ const MovieForm = () => {
                 // genre: genre,
             },
 
-            refetchQueries: [{query: LOAD_MOVIES}]
+            refetchQueries: [{ query: LOAD_MOVIES }]
 
         });
 
