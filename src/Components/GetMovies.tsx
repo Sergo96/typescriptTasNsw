@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useLazyQuery, useMutation } from '@apollo/client';
-import { LOAD_MOVIES } from '../GraphQL/Queries';
-import { Link } from 'react-router-dom';
-import { Box, Button, Snackbar } from "@material-ui/core";
-import { DELETE_MOVIE_MUTATION, EDIT_MOVIE_MUTATION } from "../GraphQL/Mutations";
-import { makeStyles } from '@material-ui/core/styles';
+import React, {useEffect, useState} from "react";
+import {useLazyQuery, useMutation} from '@apollo/client';
+import {LOAD_MOVIES} from '../GraphQL/Queries';
+import {Link} from 'react-router-dom';
+import {Box, Button, Snackbar} from "@material-ui/core";
+import {DELETE_MOVIE_MUTATION, EDIT_MOVIE_MUTATION} from "../GraphQL/Mutations";
+import {makeStyles} from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import styled from 'styled-components';
 import TextField from "@material-ui/core/TextField";
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import MuiAlert, {AlertProps} from '@material-ui/lab/Alert';
 
 
 interface movieType {
@@ -42,12 +42,21 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },
+
+    root: {
+        width: '100%',
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.warning.main,
+    },
 }));
 
 
 const GetMovies = () => {
     // const {error, loading, data} = useQuery(LOAD_MOVIES);
-    const [getMovies, { error, loading, data }] = useLazyQuery(LOAD_MOVIES);
+    const [getMovies, {error,  data}] = useLazyQuery(LOAD_MOVIES);
     const [movies, setMovies] = useState<movieType[]>([]);
     const [deleteMovie] = useMutation(DELETE_MOVIE_MUTATION);
     const classes = useStyles();
@@ -56,10 +65,13 @@ const GetMovies = () => {
     const [open, setOpen] = useState(false);
     const [openUpdateForm, setOpenUpdateForm] = useState(false);
     const [deleteAlert, setDeleteAlert] = useState(false);
+    const [updateAlert, setUpdateAlert] = useState(false);
     const [name, setName] = useState("");
     const [genre, setGenre] = useState("");
     const [updateMovie] = useMutation(EDIT_MOVIE_MUTATION);
     const [movie, setMovie] = useState<movieType | null>(null);
+
+    console.log(genre)
 
 
     useEffect(() => {
@@ -74,7 +86,7 @@ const GetMovies = () => {
             variables: {
                 id: id
             },
-            refetchQueries: [{ query: LOAD_MOVIES }]
+            refetchQueries: [{query: LOAD_MOVIES}]
         });
 
         if (error) {
@@ -103,13 +115,27 @@ const GetMovies = () => {
     };
 
 
-
-
     const alertHandleClose = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
         setDeleteAlert(false);
+    };
+
+    const alertHandleUpdateClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setUpdateAlert(false);
+    };
+
+
+    const alertHandleOpen = () => {
+        setDeleteAlert(true)
+    };
+
+    const alertHandleUpdateOpen = () => {
+        setUpdateAlert(true)
     };
 
     const handleUpdateClose = () => {
@@ -122,10 +148,9 @@ const GetMovies = () => {
                 id: id,
                 name: name,
             },
-            refetchQueries: [{ query: LOAD_MOVIES }]
+            refetchQueries: [{query: LOAD_MOVIES}]
         });
     };
-
 
 
     // if (movie) return <p>Loading ...</p>;
@@ -133,13 +158,14 @@ const GetMovies = () => {
 
     return (
         <>
+            <h1 className={classes.root}>yooo our movies</h1>
             <Button color="secondary" onClick={() => getMovies()}>
                 Click me to print all movies!
             </Button>
             {movies.map((val: movieType) => {
                 return (
                     <MovieOption>
-                        <Link to={`editMovieForm/${val.id}`} style={{ textDecoration: 'none' }}>
+                        <Link to={`editMovieForm/${val.id}`} style={{textDecoration: 'none'}}>
                             <MovieName key={val.id}>{val.name} - <span>{val.genre}</span></MovieName>
                         </Link>
                         <Button color={"secondary"} type="button" onClick={handleOpen}>
@@ -174,16 +200,16 @@ const GetMovies = () => {
                                     onClick={() => {
                                         removeMovie(val.id);
                                         handleClose();
-                                        // deleteMovieAlert();
+                                        alertHandleOpen();
                                     }}>
                                     Delete
                                 </Button>
 
                             </div>
                         </Modal>
-                        <Snackbar open={deleteAlert} autoHideDuration={6000} onClose={alertHandleClose}>
+                        <Snackbar open={deleteAlert} autoHideDuration={1000} onClose={alertHandleClose}>
                             <Alert onClose={alertHandleClose} severity="success">
-                                This is a success message!
+                                This movie deleted successfully!
                             </Alert>
                         </Snackbar>
 
@@ -225,11 +251,20 @@ const GetMovies = () => {
                                     onClick={() => {
                                         updateMovieNamehandler(movie?.id, name);
                                         handleUpdateClose();
+                                        alertHandleUpdateOpen();
                                     }}>
                                     Edit
                                 </Button>
                             </div>
                         </Modal>
+
+                        <Snackbar open={updateAlert} autoHideDuration={1000} onClose={alertHandleUpdateClose}>
+                            <Alert onClose={alertHandleUpdateClose} severity="info">
+                                This movie updated successfully!
+                            </Alert>
+                        </Snackbar>
+
+
                     </MovieOption>
 
                 )

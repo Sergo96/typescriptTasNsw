@@ -34,7 +34,7 @@ const MovieForm = () => {
 `);
 
 
-    const { loading, data } = useQuery(LOAD_MOVIE);
+    const { data } = useQuery(LOAD_MOVIE);
     const [movieData, setMovieData] = useState<movieTypes[]>([]);
 
     console.log(movieData)

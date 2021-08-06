@@ -11,22 +11,17 @@ import { Route, Switch } from 'react-router-dom';
 import styled from "styled-components";
 import GetMovies from "./Components/GetMovies";
 import MovieForm from "./Components/MovieForm";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core";
+import theme from './theme';
 
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#8c8c8d'
-        }
-    }
-})
+
 
 
 const errorLink = onError(({ graphqlErrors, networkError }: any) => {
     if (graphqlErrors) {
         graphqlErrors.map(({ message, location, path }: any) => {
-            alert(`Graphql error ${message}`);
+            alert(`Graphql error ${message}, ${location}, ${path}}`);
         });
     }
 });
