@@ -22,7 +22,7 @@ const MovieForm = () => {
     const { id }: any = useParams();
 
     // const stringId = id.toString();
-    console.log(name);
+    // console.log(name);
 
     const LOAD_MOVIE = gql(`
        query{
@@ -37,7 +37,7 @@ const MovieForm = () => {
     const { data } = useQuery(LOAD_MOVIE);
     const [movieData, setMovieData] = useState<movieTypes[]>([]);
 
-    console.log(movieData)
+    // console.log(movieData)
 
     useEffect(() => {
         if (data) {
